@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>History</title>
+{% endblock %}
+
+{% block body %}
+    {% load static %}
+    <style>
+        .panel-block img {
+            width: 20px;
+            height: 20px;
+            object-position: center;
+        }
+    </style>
+    <section class="section m-auto">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <nav class="panel is-dark">
+                    <p class="panel-heading">Application History</p>
+                    <div class="panel-block">
+                        <form class="control has-icons-left" action="{% url 'app:search_history' %}">
+                            {% csrf_token %}
+                            <input class="input is-success" type="text" placeholder="Type and press enter to search"
+                                   id="search" autocomplete="off" name="search_history"/>
+                            <span class="icon is-left has-text-success">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                            </span>
+                        </form>
+                    </div>
+
+                    <div id="panel">
+                        {% for application in user_applications %}
+                            <a class="panel-block todo-item" href="{% url 'app:application_detail' application.pk %}"><span
+                                    class="mr-auto">{{ application.project_name }} | {{ application.department }} | {{ application.amount_applied_for }}</span>
+                                {% if application.approved == True %}
+                                    <span><img src="{% static 'images/approved.webp' %}" alt="Approved"></span>
+                                {% elif application.rejected == True %}
+                                    <span><img src="{% static 'images/disapproved.webp' %}" alt="Disapproved"></span>
+                                {% else %}
+                                    <span><img src="{% static 'images/pending.png' %}" alt="Pending"></span>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+
+                </nav>
+            </div>
+        </div>
+    </section>
+{% endblock %}

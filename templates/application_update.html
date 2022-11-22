@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Application</title>
+{% endblock %}
+
+{% block body %}
+    <section class="container-xl px-4 mt-6">
+        {#        <hr class="mt-0 mb-4">#}
+        <div class="row">
+            <div class="col-xl-8 container">
+                <!-- Account details card-->
+                <div class="card mb-4">
+                    <div class="card-header has-background-grey-dark has-text-info-light is-bold"
+                         style="font-weight: 700; line-height: 1.25; font-size: 1.25em; padding: .75em 1em;">Application
+                        Details
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'app:application_update' application.id %}">
+                            {% csrf_token %}
+                            <!-- Form Group (username)-->
+                            <div class="mb-3">
+                                <label class="small mb-1" for="inputUsername">Applicant Details</label>
+                                <input class="form-control" id="inputUsername" type="text"
+                                       placeholder="Enter your username" name="username" disabled
+                                       value="{{ fund_application.applicant.get_full_user_details }}">
+                            </div>
+                            <!-- Form Row        -->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (organization name)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="departmentName">Department name</label>
+                                    <select name="department" id="departmentName" class="form-control">
+                                        <option value="{{ fund_application.department.id }}"
+                                                selected>{{ fund_application.department.name | capfirst }}</option>
+                                        {% for department in departments %}
+                                            <option value="{{ department.id }}">{{ department.name | capfirst }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <!-- Form Group (location)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="highQ">Campus</label>
+                                    <select name="campus" id="highQ" class="form-control">
+                                        <option value="{{ fund_application.campus }}"
+                                                selected>{{ fund_application.campus }}</option>
+                                        <option value="Main">Main</option>
+                                        <option value="CBD">CBD</option>
+                                        <option value="Naivasha">Naivasha</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="project_title">Project Title</label>
+                                    <input class="form-control" id="project_title" type="text"
+                                           placeholder="Project Name"
+                                           name="project_name" value="{{ fund_application.project_name }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="amount">Amount</label>
+                                    <input class="form-control" id="amount" type="number"
+                                           placeholder="Enter your request amount"
+                                           name="amount" value="{{ fund_application.amount_applied_for }}">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="small mb-1" for="project_details">Project Description</label>
+                                <textarea name="project_description" id="project_details"
+                                          class="form-control"
+                                          value="{{ fund_application.project_description }}"></textarea>
+                            </div>
+
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="startPicker">Project Start</label>
+                                    <input class="form-control" type="date" name="ps" id="startPicker"
+                                           value="{{ fund_application.ps.isocalendar }}">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="endPicker">Project End</label>
+                                    <input class="form-control" type="date" name="pe" id="endPicker"
+                                           value="{{ fund_application.pe.isocalendar }}">
+                                </div>
+                            </div>
+                            <!-- Save changes button-->
+                            <button class="btn btn-primary" type="submit">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Log In</title>
+{% endblock %}
+
+{% block body %}
+    <section class="login-panel container column is-5">
+        <form action="" class="login-form mt-4" method="post">
+            {% csrf_token %}
+            <div class="field">
+                <label class="label">Registration Number</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="" name="reg_no">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="password" value="" name="password">
+                </div>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" type="submit">Submit</button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" type="reset">Reset</button>
+                </div>
+            </div>
+            <div class="field">
+{#                <p class="help is-danger">Username or password is incorrect</p>#}
+                <small class="help is-dark is-size-6">Don't have an account? <a href="{% url 'app:register' %}" class="help is-inline is-success is-size-6">Sign Up</a></small>
+            </div>
+        </form>
+    </section>
+{% endblock %}

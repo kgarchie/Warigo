@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Sign Up</title>
+{% endblock %}
+
+{% block body %}
+    <section class="login-panel container column is-5">
+        <form action="" class="login-form mt-3" id="reg_form" method="post">
+            {% csrf_token %}
+            <div class="field">
+                <label class="label">Registration Number</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="" name="reg_no">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Student Name</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="text" name="student_name">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-check"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Student Email</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="email" placeholder="institutional email" value=""
+                           name="student_email" id="student_email">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <span class="icon is-small is-right">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                </div>
+                <p class="help is-danger" id="email-help">This email is not a valid institutional email</p>
+            </div>
+
+            <div class="field">
+                <label class="label">Password</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="password" value="" name="password1" id="password1">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Confirm Password</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input class="input" type="password" value="" name="password2" id="password2">
+                </div>
+                <p class="help is-danger" id="password-help">The Passwords Do Not Match</p>
+            </div>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" type="submit">Submit</button>
+                </div>
+                <div class="control">
+                    <button class="button is-link is-light" type="reset">Reset</button>
+                </div>
+            </div>
+        </form>
+    </section>
+    <script>
+        const institutionalEmailRegex = '^[a-zA-Z0-9._%+-]+@(?:jkuat\.ac\.ke|students\.jkuat\.ac\.ke)$';
+        const passwordHelp = document.getElementById('password-help');
+        const password2 = document.getElementById('password2');
+        const emailHelp = document.getElementById('email-help');
+        const email = document.getElementById('student-email');
+        passwordHelp.style.visibility = 'hidden';
+        emailHelp.style.visibility = 'hidden';
+
+        password2.addEventListener('input', () => {
+            passwordHelp.innerText = "The Passwords Do Not Match";
+            const password1 = document.getElementById('password1');
+            const password2 = document.getElementById('password2');
+            if (password1.value !== password2.value) {
+                passwordHelp.style.visibility = 'visible';
+            } else {
+                passwordHelp.style.visibility = 'hidden';
+            }
+        });
+
+        email.addEventListener('input', () => {
+            emailHelp.style.visibility = 'hidden';
+
+            const emailValue = email.value;
+            if (emailValue.match(institutionalEmailRegex)) {
+                if (password2.value === '') {
+                    passwordHelp.innerText = "Password cannot be empty";
+                    passwordHelp.style.visibility = 'visible';
+                } else {
+                    emailHelp.style.visibility = 'hidden';
+                }
+            } else {
+                emailHelp.style.visibility = 'visible';
+            }
+        });
+    </script>
+{% endblock %}

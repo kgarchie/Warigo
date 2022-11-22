@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Dash Board</title>
+{% endblock %}
+
+{% block body %}
+    <section class="section m-auto">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <nav class="panel is-dark">
+                    <p class="panel-heading has-background-grey-dark">Dashboard</p>
+                    <ul id="panel">
+                        <li><a class="panel-block todo-item" href="{% url 'app:apply' %}"><span class="mr-auto">Apply For Funds</span></a></li>
+                        <li><a class="panel-block todo-item" href="{% url 'app:view_pending' %}"><span class="mr-auto">View Pending Applications</span></a></li>
+                        <li><a class="panel-block todo-item" href="{% url 'app:history' %}"><span class="mr-auto">View History</span></a></li>
+                        <li><a class="panel-block todo-item" href="{% url 'app:view_approved' %}"><span class="mr-auto">Approved Funds</span></a></li>
+                    </ul>
+
+                </nav>
+            </div>
+        </div>
+    </section>
+{% endblock %}
