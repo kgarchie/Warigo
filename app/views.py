@@ -112,7 +112,7 @@ def logout_function(request):
     return render(request, 'index.html')
 
 
-@login_required(login_url='login')
+@login_required(login_url='app:login')
 def dashboard(request):
     return render(request, 'dashboard.html')
 
