@@ -10,7 +10,7 @@ from .managers import UserManager
 # Create your models here.
 
 class User(AbstractBaseUser, PermissionsMixin):
-    staff_id_or_reg_no = models.CharField(max_length=10, unique=True,
+    staff_id_or_reg_no = models.CharField(max_length=20, unique=True,
                                           help_text='Enter your Staff/ID Number or Registration Number')
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=50)
