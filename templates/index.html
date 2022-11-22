@@ -3,7 +3,57 @@
 {% block title %}
     <title>Home</title>
 {% endblock %}
+<link rel="stylesheet" href="../static/css/bulma/css/bulma.min.css">
 
 {% block body %}
-    <section class="container">Home Page</section>
+    {% load static %}
+    <style>
+        .full {
+            width: 100vw;
+            height: 80vh;
+            display: grid;
+            place-items: center;
+        }
+
+        .welcome-paragraph {
+            font-size: 30pt;
+            font-weight: 700;
+            max-width: 30vw;
+            line-height: 2ch;
+        }
+
+        .button.is-info {
+            margin: auto;
+            text-align: center;
+            width: 150px;
+            height: 60px;
+        }
+
+        .is-flex {
+            gap: 2rem;
+        }
+
+        .image img {
+            width: 700px;
+            object-position: center;
+            object-fit: cover;
+        }
+    </style>
+    <section class="container full">
+        <div class="is-flex is-align-content-center is-align-items-center">
+            <div class="call-to-action">
+                <p class="welcome-paragraph" style="text-transform: capitalize">Welcome to the students' online finance
+                    planning and management system</p>
+                {% if user.is_athenticated %}
+                    <a class="button is-info mt-4" href="{% url 'app:apply' %}">Get Started</a>
+                {% else %}
+                    <a class="button is-info mt-4" href="{% url 'app:login' %}">Get Started</a>
+                {% endif %}
+            </div>
+            <div class="image">
+                <img src="{% static 'images/home.jpg' %}" srcset="../static/images/home.jpg" alt="">
+            </div>
+        </div>
+    </section>
+
 {% endblock %}
