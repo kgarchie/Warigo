@@ -84,7 +84,7 @@ class FundApplication(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.applicant.name
+        return self.applicant.name + ' - ' + self.project_name
 
 
 class Event(models.Model):
