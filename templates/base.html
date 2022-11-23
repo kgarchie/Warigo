@@ -32,16 +32,15 @@
                 Dashboard
             </a>
 
-            <a class="navbar-item" href="{% url 'app:history' %}">
-                History
-            </a>
-
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
-                    More
+                    Shortcuts
                 </a>
 
                 <div class="navbar-dropdown">
+                    <a class="navbar-item" href="{% url 'app:events' %}">
+                        History
+                    </a>
                     <a class="navbar-item" href="{% url 'app:events' %}">
                         Events
                     </a>
