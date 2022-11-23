@@ -32,4 +32,9 @@ urlpatterns = [
     path('search/approved/', views.search_approved, name='search_approved'),
     path('search/rejected/', views.search_rejected, name='search_rejected'),
     path('search/appealed/', views.search_appealed, name='search_appealed'),
+
+    path('events/', views.events, name='events'),
+    path('events/<int:pk>/', views.event_details, name='event_details'),
+    path('events/<int:pk>/delete/', views.event_delete, name='event_delete'),
+    path('events/create/', views.create_event, name='create_event'),
 ]

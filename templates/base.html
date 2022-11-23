@@ -19,7 +19,7 @@
         </a>
 
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
-           data-target="navbarBasic">
+           data-target="navbarBasic" id="nav-burger">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -42,8 +42,8 @@
                 </a>
 
                 <div class="navbar-dropdown">
-                    <a class="navbar-item">
-                        About
+                    <a class="navbar-item" href="{% url 'app:events' %}">
+                        Events
                     </a>
                     <hr class="navbar-divider">
                     <a class="navbar-item">
@@ -73,7 +73,7 @@
         </div>
     </div>
 </nav>
-<section class="messages">
+<section class="messages container mt-3 is-flex is-align-items-center is-justify-content-center">
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
@@ -85,5 +85,12 @@
 {% block body %}
 
 {% endblock %}
+<script>
+    navBurger = document.getElementById('nav-burger');
+
+    navBurger.addEventListener('click', () => {
+        navBurger.classList.toggle('is-active');
+    })
+</script>
 </body>
 </html>

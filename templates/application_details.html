@@ -16,8 +16,7 @@
                         Details
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{% url 'app:application_approve' application.id %}">
-                            {% csrf_token %}
+                        <form>
                             <!-- Form Group (username)-->
                             <div class="mb-3">
                                 <label class="small mb-1" for="inputUsername">Applicant Details</label>
@@ -57,44 +56,48 @@
                                     <label class="small mb-1" for="project_title">Project Title</label>
                                     <input class="form-control" id="project_title" type="text"
                                            placeholder="Project Name"
-                                           name="project_name" disabled>
+                                           name="project_name" disabled value="{{ fund_application.project_name }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="amount">Amount</label>
                                     <input class="form-control" id="amount" type="number"
                                            placeholder="Enter your request amount"
-                                           name="amount" disabled>
+                                           name="amount" disabled value="{{ fund_application.amount_applied_for }}">
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="small mb-1" for="project_details">Project Description</label>
                                 <textarea name="project_description" id="project_details"
-                                          class="form-control" disabled></textarea>
+                                          class="form-control"
+                                          disabled>{{ fund_application.project_description }}</textarea>
                             </div>
 
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="startPicker">Project Start</label>
                                     <input class="form-control" type="date" name="ps" id="startPicker" disabled>
+                                    Currently - {{ fund_application.ps }}
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="endPicker">Project End</label>
-                                    <input class="form-control" type="date" name="pe" id="endPicker" disabled>
+                                    <input class="form-control" type="date" name="pe" id="endPicker" disabled
+                                           value="{{ fund_application.ps.isocalendar }}">
+                                    Currently - {{ fund_application.pe }}
                                 </div>
                             </div>
                             <!-- Save changes button-->
-                            {% if user.is_admin %}
-                                <button class="button is-primary" type="submit">Approve</button>
+                            {% if user.is_staff %}
+                                <a class="button is-primary" href="{% url 'app:application_approve' fund_application.pk %}">Approve</a>
                             {% endif %}
                             {% if application.rejected == True %}
-                                <a class="button is-info" href=""{% url 'app:application_appeal' application.id %}>Appeal</a>
+                                <a class="button is-info" href="{% url 'app:application_appeal' fund_application.pk %}">Appeal</a>
                             {% else %}
-                                <a class="button is-dark" href=""{% url 'app:application_update' application.id %}>Update</a>
+                                <a class="button is-dark" href="{% url 'app:application_update' fund_application.pk %}">Update</a>
                             {% endif %}
                             <a class="button is-danger"
-                               href="{% url 'app:application_delete' application.id %}">Delete</a>
+                               href="{% url 'app:application_delete' fund_application.pk %}">Delete</a>
 
                         </form>
                     </div>

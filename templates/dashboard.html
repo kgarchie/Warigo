@@ -15,6 +15,9 @@
                         <li><a class="panel-block todo-item" href="{% url 'app:view_pending' %}"><span class="mr-auto">View Pending Applications</span></a></li>
                         <li><a class="panel-block todo-item" href="{% url 'app:history' %}"><span class="mr-auto">View History</span></a></li>
                         <li><a class="panel-block todo-item" href="{% url 'app:view_approved' %}"><span class="mr-auto">Approved Funds</span></a></li>
+                        {% if user.is_admin or user.is_staff %}
+                            <li><a class="panel-block todo-item" href="{% url 'app:create_event' %}"><span class="mr-auto">Create Event</span></a></li>
+                        {% endif %}
                     </ul>
 
                 </nav>

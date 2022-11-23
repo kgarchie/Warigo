@@ -5,8 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, login, authenticate
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
+from django.utils.datastructures import MultiValueDictKeyError
 
-from .models import User, FundApplication, Department
+from .models import User, FundApplication, Department, Event
 
 
 # Create your views here.
@@ -100,7 +101,7 @@ def login_function(request):
         user = authenticate(request, staff_id_or_reg_no=reg_no, password=password)
         if user is not None:
             login(request, user)
-            return redirect('app:index')
+            return redirect('app:dashboard')
         else:
             messages.error(request, 'Invalid Credentials')
             return redirect('app:login')
@@ -134,6 +135,8 @@ def register(request):
             messages.success(request, 'Student Registered Successfully')
             login(request, user)
             return redirect('app:index')
+    if request.user.is_authenticated:
+        return redirect('app:index')
     return render(request, 'register.html')
 
 
@@ -171,7 +174,7 @@ def application_detail(request, pk):
     department = Department.objects.all()
     application = FundApplication.objects.get(pk=pk)
     context = {
-        'application': application,
+        'fund_application': application,
         'departments': department
     }
     return render(request, 'application_details.html', context)
@@ -194,7 +197,19 @@ def application_update(request, pk):
         ps = request.POST['ps']
         pe = request.POST['pe']
 
-        department = Department.objects.get(id=department)
+        if ps != "":
+            # convert ps iso date to datetime
+            ps = datetime.datetime.strptime(ps, '%Y-%m-%d')
+        else:
+            ps = fund_application.ps
+
+        if pe != "":
+            # convert pe iso date to datetime
+            pe = datetime.datetime.strptime(pe, '%Y-%m-%d')
+        else:
+            pe = fund_application.pe
+
+        department = Department.objects.get(pk=department)
 
         fund_application.applicant = applicant
         fund_application.department = department
@@ -209,50 +224,46 @@ def application_update(request, pk):
         fund_application.status = 'Edited | Pending'
 
         fund_application.save()
-        messages.success(request, 'Your application has been submitted successfully')
+        messages.success(request, 'Your application has been updated successfully')
         return redirect('app:history')
     return render(request, 'application_update.html', context)
 
 
 def application_delete(request, pk):
     application = FundApplication.objects.get(pk=pk)
-    if application.approved == True or application.rejected == True:
+    if application.approved is True or application.rejected is True:
         messages.error(request, 'You cannot delete an approved or rejected application')
         return redirect('app:history')
+    application.delete()
     messages.success(request, 'Application deleted successfully')
     return redirect('app:history')
 
 
-def application_approve(request, id):
-    application = FundApplication.objects.get(id=id)
-    if request.method == 'POST':
-        application.approved = True
-        application.status = 'Approved'
-        application.save()
-        messages.success(request, 'Application approved successfully')
-        return redirect('app:dashboard')
-    return render(request, 'application_details.html', context={'application': application})
+def application_approve(request, pk):
+    application = FundApplication.objects.get(pk=pk)
+    application.approved = True
+    application.save()
+    messages.success(request, 'Application approved successfully')
+    return render(request, 'application_details.html', {'fund_application': application,
+                                                        'departments': Department.objects.all()})
 
 
-def application_reject(request, id):
-    application = FundApplication.objects.get(id=id)
-    if request.method == 'POST':
-        application.rejected = True
-        application.status = 'Rejected'
-        application.save()
-        messages.success(request, 'Application rejected successfully')
-        return redirect('app:dashboard')
-    return render(request, 'application_details.html', context={'application': application})
+def application_reject(request, pk):
+    application = FundApplication.objects.get(pk=pk)
+    application.rejected = True
+    application.save()
+    messages.success(request, 'Application rejected successfully')
+    return render(request, 'application_details.html', context={'fund_application': application,
+                                                                'departments': Department.objects.all()})
 
 
-def application_appeal(request, id):
-    application = FundApplication.objects.get(id=id)
-    if request.method == 'POST':
-        application.status = 'Rejected | Appealed'
-        application.save()
-        messages.success(request, 'Application appealed successfully')
-        return redirect('app:dashboard')
-    return render(request, 'application_details.html', context={'application': application})
+def application_appeal(request, pk):
+    application = FundApplication.objects.get(pk=pk)
+    application.appealed = True
+    application.save()
+    messages.success(request, 'Application appealed successfully')
+    return render(request, 'application_details.html', context={'fund_application': application,
+                                                                'departments': Department.objects.all()})
 
 
 def view_rejected(request):
@@ -342,3 +353,81 @@ def search_appealed(request):
         }
         return render(request, 'history.html', context)
     return render(request, 'history.html')
+
+
+def create_event(request):
+    approved_projects = FundApplication.objects.filter(approved=True, applicant=request.user)
+    departments = Department.objects.all()
+    context = {
+        'approved_projects': approved_projects,
+        'departments': departments
+    }
+    if request.method == 'POST':
+        event_name = request.POST['event_name']
+        event_description = request.POST['event_description']
+        event_date = request.POST['es']
+        event_time = request.POST['et']
+        event_venue = request.POST['event_venue']
+        event_creator = request.user
+        event_dept = request.POST['department']
+        funds = request.POST.get('funds')
+        campus = request.POST['campus']
+
+        if event_date != "":
+            # convert event_date iso date to datetime
+            event_date = datetime.datetime.strptime(event_date, '%Y-%m-%d')
+        else:
+            event_date = None
+
+        if event_time != "":
+            # convert event time to datetime
+            event_time = datetime.datetime.strptime(event_time, '%H:%M')
+        else:
+            event_time = None
+
+        try:
+            funds = FundApplication.objects.get(pk=funds)
+        except FundApplication.DoesNotExist:
+            messages.error(request, 'Please select a valid project')
+            return redirect('app:create_event')
+        except MultiValueDictKeyError:
+            messages.error(request, 'Please select a valid project')
+            return redirect('app:create_event')
+
+        try:
+            department = Department.objects.get(pk=event_dept)
+        except Department.DoesNotExist:
+            messages.error(request, 'Please select a valid department')
+            return redirect('app:create_event')
+
+        event = Event.objects.create(name=event_name, description=event_description, date=event_date, time=event_time,
+                                     venue=event_venue, department=department, creator=event_creator, campus=campus,
+                                     funds=funds)
+
+        event.save()
+        messages.success(request, 'Event created successfully')
+        return redirect('app:events')
+    return render(request, 'create_event.html', context)
+
+
+def events(request):
+    db_events = Event.objects.all()
+    context = {
+        'events': db_events
+    }
+    return render(request, 'events.html', context)
+
+
+def event_details(request, pk):
+    event = Event.objects.get(pk=pk)
+    context = {
+        'event': event
+    }
+    return render(request, 'event_details.html', context)
+
+
+def event_delete(request, pk):
+    event = Event.objects.get(pk=pk)
+    event.delete()
+    messages.success(request, 'Event deleted successfully')
+    return redirect('app:events')

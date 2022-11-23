@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Dash Board</title>
+{% endblock %}
+
+{% block body %}
+    <section class="section m-auto">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <nav class="panel is-dark">
+                    <p class="panel-heading has-background-grey-dark">Upcoming Events</p>
+                    <ul id="panel">
+                        {% for event in events %}
+                            <li><a class="panel-block todo-item" href="{% url 'app:event_details' event.pk %}"><span
+                                    class="mr-auto">{{ event.name }} | {{ event.venue }} </span></a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+{% endblock %}

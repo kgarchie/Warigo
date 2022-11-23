@@ -11,7 +11,7 @@
             <div class="field">
                 <label class="label">Registration Number</label>
                 <div class="control">
-                    <input class="input" type="text" placeholder="" name="reg_no">
+                    <input class="input" type="text" placeholder="" name="reg_no" required>
                 </div>
             </div>
 
@@ -73,7 +73,8 @@
         const passwordHelp = document.getElementById('password-help');
         const password2 = document.getElementById('password2');
         const emailHelp = document.getElementById('email-help');
-        const email = document.getElementById('student-email');
+        const email = document.getElementById('student_email');
+        const form = document.getElementById('reg_form');
         passwordHelp.style.visibility = 'hidden';
         emailHelp.style.visibility = 'hidden';
 
@@ -83,6 +84,9 @@
             const password2 = document.getElementById('password2');
             if (password1.value !== password2.value) {
                 passwordHelp.style.visibility = 'visible';
+                form.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                });
             } else {
                 passwordHelp.style.visibility = 'hidden';
             }

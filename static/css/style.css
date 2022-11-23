@@ -3,6 +3,18 @@
     padding-right: 1.5rem;
 }
 
+.error{
+    color: #ee1515;
+}
+
+.info{
+    color: #4b9fff;
+}
+
+.success{
+    color: #00b300;
+}
+
 .logo {
     font-size: larger;
     font-weight: bold;

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    <title>Application</title>
+    <title>Dash Board</title>
 {% endblock %}
 
 {% block body %}
@@ -12,18 +12,19 @@
                 <!-- Account details card-->
                 <div class="card mb-4">
                     <div class="card-header has-background-grey-dark has-text-info-light is-bold"
-                         style="font-weight: 700; line-height: 1.25; font-size: 1.25em; padding: .75em 1em;">Application
+                         style="font-weight: 700; line-height: 1.25; font-size: 1.25em; padding: .75em 1em;">Event
                         Details
                     </div>
                     <div class="card-body">
-                        <form method="post" action="{% url 'app:application_update' fund_application.pk %}">
+                        <form method="post">
                             {% csrf_token %}
                             <!-- Form Group (username)-->
                             <div class="mb-3">
                                 <label class="small mb-1" for="inputUsername">Applicant Details</label>
                                 <input class="form-control" id="inputUsername" type="text"
                                        placeholder="Enter your username" name="username" disabled
-                                       value="{{ fund_application.applicant.get_full_user_details }}">
+                                        {% if user.name != '' %} value="{{ user.get_full_user_details }}"
+                                       {% else %}value="{{ user.email }}"{% endif %}">
                             </div>
                             <!-- Form Row        -->
                             <div class="row gx-3 mb-3">
@@ -31,10 +32,8 @@
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="departmentName">Department name</label>
                                     <select name="department" id="departmentName" class="form-control">
-                                        <option value="{{ fund_application.department.id }}"
-                                                selected>{{ fund_application.department.name | capfirst }}</option>
                                         {% for department in departments %}
-                                            <option value="{{ department.id }}">{{ department.name | capfirst }}</option>
+                                            <option value="{{ department.pk }}">{{ department.name | capfirst }}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -42,9 +41,7 @@
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="highQ">Campus</label>
                                     <select name="campus" id="highQ" class="form-control">
-                                        <option value="{{ fund_application.campus }}"
-                                                selected>{{ fund_application.campus }}</option>
-                                        <option value="Main">Main</option>
+                                        <option value="Main" selected="selected">Main</option>
                                         <option value="CBD">CBD</option>
                                         <option value="Naivasha">Naivasha</option>
                                     </select>
@@ -53,40 +50,55 @@
 
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="project_title">Project Title</label>
+                                    <label class="small mb-1" for="project_title">Events Title</label>
                                     <input class="form-control" id="project_title" type="text"
-                                           placeholder="Project Name"
-                                           name="project_name" value="{{ fund_application.project_name }}">
+                                           placeholder="Event Name"
+                                           name="event_name">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="small mb-1" for="amount">Amount</label>
                                     <input class="form-control" id="amount" type="number"
-                                           placeholder="Enter your request amount"
-                                           name="amount" value="{{ fund_application.amount_applied_for }}">
+                                           placeholder="Enter your budget"
+                                           name="amount">
                                 </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="small mb-1" for="project_details">Project Description</label>
-                                <textarea name="project_description" id="project_details"
-                                          class="form-control">{{ fund_application.project_description }}</textarea>
                             </div>
 
                             <div class="row gx-3 mb-3">
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="startPicker">Project Start</label>
-                                    <input class="form-control" type="date" name="ps" id="startPicker">
-                                    Currently - {{ fund_application.ps }}
+                                    <label class="small mb-1" for="venue">Venue</label>
+                                    <select name="event_venue" id="venue" class="form-control">
+                                        <option value="Assembly Hall">Assembly Hall</option>
+                                        <option value="Tech House">Tech House</option>
+                                        <option value="Sajorec">Sajorec</option>
+                                    </select>
                                 </div>
-
                                 <div class="col-md-6">
-                                    <label class="small mb-1" for="endPicker">Project End</label>
-                                    <input class="form-control" type="date" name="pe" id="endPicker">
-                                    Currently - {{ fund_application.pe }}
+                                    <label class="small mb-1" for="departmentName">Event Fund Source</label>
+                                    <select name="funds" id="departmentName" class="form-control">
+                                        {% for funds in approved_projects %}
+                                            <option value="{{ funds.id }}">{{ funds.project_name | capfirst }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="small mb-1" for="project_details">Event Description</label>
+                                <textarea name="event_description" id="project_details"
+                                          class="form-control"></textarea>
+                            </div>
+                            <div class="row gx-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="startPicker">Event Date</label>
+                                    <input class="form-control" type="date" name="es" id="startPicker">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="timePicker">Event Time</label>
+                                    <input class="form-control" type="time" name="et" id="timePicker">
                                 </div>
                             </div>
                             <!-- Save changes button-->
-                            <button class="btn btn-primary" type="submit">Update</button>
+                            <button class="btn btn-primary" type="submit">Create</button>
                         </form>
                     </div>
                 </div>

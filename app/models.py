@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def get_full_user_details(self):
-        full_user_details = self.name + '\t' + self.staff_id_or_reg_no
+        full_user_details = self.name + '\t' + self.staff_id_or_reg_no + '\t' + self.email
         return full_user_details
 
     def get_full_name(self):
@@ -79,8 +79,34 @@ class FundApplication(models.Model):
     pe = models.DateField(blank=True, null=True)
     approved = models.BooleanField(default=False)
     rejected = models.BooleanField(default=False)
+    appealed = models.BooleanField(default=False)
     campus = models.CharField(max_length=50)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.applicant.name
+
+
+class Event(models.Model):
+    name = models.CharField(max_length=50)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    description = models.TextField()
+    campus = models.CharField(max_length=50)
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+    venue = models.CharField(max_length=50)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    funds = models.ForeignKey(FundApplication, on_delete=models.CASCADE, blank=True, null=True)
+    spent_funds = models.IntegerField(blank=True, null=True, default=0)
+
+    @property
+    def get_full_event_details(self):
+        full_event_details = self.name + '\t' + self.description + '\t' + self.venue + '\t' + str(self.date)
+        return full_event_details
+
+    @property
+    def get_events_with_approved_funds(self):
+        return FundApplication.objects.filter(approved=True)
+
+    def __str__(self):
+        return self.name
