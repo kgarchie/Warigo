@@ -58,7 +58,7 @@ def apply(request):
         try:
             fund_application.save()
             messages.success(request, 'Application submitted successfully')
-            return redirect('app:index')
+            return redirect('app:history')
         except IntegrityError:
             messages.error(request, 'Application already exists')
             return redirect('app:apply')
