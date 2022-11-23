@@ -363,7 +363,10 @@ def search_appealed(request):
 
 
 def create_event(request):
-    approved_projects = FundApplication.objects.filter(approved=True, applicant=request.user)
+    if request.user.is_staff:
+        approved_projects = FundApplication.objects.filter(approved=True)
+    else:
+        approved_projects = FundApplication.objects.filter(approved=True, applicant=request.user)
     departments = Department.objects.all()
     context = {
         'approved_projects': approved_projects,
