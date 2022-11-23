@@ -47,7 +47,7 @@
                 <p class="welcome-paragraph" style="text-transform: capitalize">Welcome to the students' online finance
                     planning and management system</p>
                 {% if user.is_authenticated %}
-                    <a class="button is-info mt-4" href="{% url 'app:apply' %}">Get Started</a>
+                    <a class="button is-info mt-4" href="{% url 'app:dashboard' %}">Get Started</a>
                 {% else %}
                     <a class="button is-info mt-4" href="{% url 'app:login' %}">Get Started</a>
                 {% endif %}
