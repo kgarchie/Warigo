@@ -11,7 +11,7 @@
                 <nav class="panel is-dark">
                     <p class="panel-heading has-background-grey-dark">Dashboard</p>
                     <ul id="panel">
-                        {% if user.is_admin %}
+                        {% if user.is_staff %}
                             <li><a class="panel-block todo-item" href="{% url 'app:history' %}"><span class="mr-auto">All Applications</span></a></li>
                         {% else %}
                             <li><a class="panel-block todo-item" href="{% url 'app:apply' %}"><span class="mr-auto">Apply For Funds</span></a></li>
