@@ -67,11 +67,18 @@ def apply(request):
 
 @login_required(login_url='app:login')
 def history(request):
-    user_applications = FundApplication.objects.filter(applicant=request.user)
-    context = {
-        'user_applications': user_applications
-    }
-    return render(request, 'history.html', context)
+    if request.user.is_staff:
+        user_applications = FundApplication.objects.all()
+        context = {
+            'user_applications': user_applications
+        }
+        return render(request, 'history.html', context)
+    else:
+        user_applications = FundApplication.objects.filter(applicant=request.user)
+        context = {
+            'user_applications': user_applications
+        }
+        return render(request, 'history.html', context)
 
 
 def search_history(request):
